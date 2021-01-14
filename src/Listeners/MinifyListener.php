@@ -8,6 +8,9 @@ use Statamic\Events\ResponseCreated;
 
 class MinifyListener
 {
+	
+	private $minPath = 'min/';
+	
     /**
      * before response sent back to browser
      */
@@ -104,7 +107,7 @@ class MinifyListener
 		}
 
 		// do we need to make min dir?
-		$minPath = public_path('min');
+		$minPath = public_path($this->minPath);
 		if (!is_dir($minPath)){
 			File::makeDirectory($minPath, $mode = 0777, true, true);
 		}
@@ -122,7 +125,7 @@ class MinifyListener
 					
 					$tag = $this->combineAndMinify($minPath, $file, 'css');
 					if ($tag != ''){
-						$replacementCSSGrouped[$media][] = '<link rel="stylesheet" type="text/css" href="min/'.$tag['file'].'.css?'.$tag['version'].'" media="'.$index.'" />';
+						$replacementCSSGrouped[$media][] = '<link rel="stylesheet" type="text/css" href="'.$this->minPath.$tag['file'].'.css?'.$tag['version'].'" media="'.$index.'" />';
 					}
 								
 				} else {
@@ -134,7 +137,7 @@ class MinifyListener
 			// or not		
 			$tag = $this->combineAndMinify($minPath, $filesNoSubgroups, 'css');
 			if ($tag != ''){
-				$replacementCSS[] = '<link rel="stylesheet" type="text/css" href="min/'.$tag['file'].'.css?'.$tag['version'].'" media="'.$media.'" />';
+				$replacementCSS[] = '<link rel="stylesheet" type="text/css" href="'.$this->minPath.$tag['file'].'.css?'.$tag['version'].'" media="'.$media.'" />';
 			}
 			
 		}
@@ -159,7 +162,7 @@ class MinifyListener
 		if (count($linkElements) > 0){
 			$tag = $this->combineAndMinify($minPath, $linkElements, 'js');
 			if ($tag != ''){
-				$response = str_replace($removeJS[0], '<script type="text/javascript" src="min/'.$tag['file'].'.js?'.$tag['version'].'"></script>', $response);
+				$response = str_replace($removeJS[0], '<script type="text/javascript" src="'.$this->minPath.$tag['file'].'.js?'.$tag['version'].'"></script>', $response);
 			}
 		}
 		
@@ -170,7 +173,7 @@ class MinifyListener
 			
 				$tag = $this->combineAndMinify($minPath, $linkElements, 'js');
 				if ($tag != ''){
-					$response = str_replace($removeJSGroups[$group][0], '<script type="text/javascript" src="min/'.$tag['file'].'.js?'.$tag['version'].'"></script>', $response);
+					$response = str_replace($removeJSGroups[$group][0], '<script type="text/javascript" src="'.$this->minPath.$tag['file'].'.js?'.$tag['version'].'"></script>', $response);
 				}
 			
 			}
