@@ -1,0 +1,31 @@
+{
+    "name": "thoughtco/minify",
+    "description": "Minify",
+    "autoload": {
+        "psr-4": {
+            "Thoughtco\\Minify\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ryan Mitchell"
+        }
+    ],
+    "support": {
+        "email": "help@thoughtcollective.com"
+    },
+    "extra": {
+        "statamic": {
+            "name": "Minify",
+            "description": "Automatically minifies CSS and JS files"
+        },
+        "laravel": {
+            "providers": [
+                "Thoughtco\\Minify\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "matthiasmullie/minify": "*"
+    }
+}
