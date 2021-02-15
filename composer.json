@@ -1,6 +1,6 @@
 {
-    "name": "thoughtco/minify",
-    "description": "Minify",
+    "name": "thoughtco/statamic-minify",
+    "description": "Automatically minifies CSS and JS files on a Statamic v3 site",
     "autoload": {
         "psr-4": {
             "Thoughtco\\Minify\\": "src"
