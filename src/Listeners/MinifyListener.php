@@ -24,6 +24,10 @@ class MinifyListener
     // parse for css/js
     protected function parseForMinifiableFiles($response)
     {
+        // if disabled by config
+        if (!config('thoughtco.minify.minify_enabled', false))
+            return;
+
 		// linkgroups as we match by media type
 		$cssGroups = array();
 
@@ -34,77 +38,87 @@ class MinifyListener
 		// matches to remove
 		$removeCSS = $removeCSSGroups = $removeJS = $removeJSGroups = array();
 
-		// match link[href]
-		preg_match_all('/<link([^>]+)href="([^"]+)"([^>]*)>/i', $response, $linkMatches, PREG_OFFSET_CAPTURE);
-		if (count($linkMatches) > 0){
+        // are we minifying css ?
+        if (in_array('css', config('thoughtco.minify.file_types', [])) {
 
-			foreach ($linkMatches[0] as $i=>$match){
+    		// match link[href]
+    		preg_match_all('/<link([^>]+)href="([^"]+)"([^>]*)>/i', $response, $linkMatches, PREG_OFFSET_CAPTURE);
+    		if (count($linkMatches) > 0){
 
-				// ignore if IE blocks
-				if (stripos($match[0], 'rel="stylesheet') !== FALSE && preg_match('/IE([^>]*)>/i', substr($response, $match[1] - 6, 7)) !== 1){
+    			foreach ($linkMatches[0] as $i=>$match){
 
-					preg_match('/media="([^"]+)"/i', $match[0], $mediaMatch);
-					if (count($mediaMatch) > 1){
+    				// ignore if IE blocks
+    				if (stripos($match[0], 'rel="stylesheet') !== FALSE && preg_match('/IE([^>]*)>/i', substr($response, $match[1] - 6, 7)) !== 1){
 
-						if (strpos($linkMatches[2][$i][0], '//') === FALSE){
+    					preg_match('/media="([^"]+)"/i', $match[0], $mediaMatch);
+    					if (count($mediaMatch) > 1){
 
-							// no grouping
-							if (strpos($linkMatches[0][$i][0], 'data-group') === FALSE){
+    						if (strpos($linkMatches[2][$i][0], '//') === FALSE){
 
-								$cssGroups[$mediaMatch[1]][] = $linkMatches[2][$i][0];
-								$removeCSS[] = $match[0];
+    							// no grouping
+    							if (strpos($linkMatches[0][$i][0], 'data-group') === FALSE){
 
-							// grouping
-							} else {
+    								$cssGroups[$mediaMatch[1]][] = $linkMatches[2][$i][0];
+    								$removeCSS[] = $match[0];
 
-								preg_match_all('/data-group="([^"]+)"/i', $linkMatches[0][$i][0], $groupMatch);
+    							// grouping
+    							} else {
 
-								// make an array
-								if (!isset($cssGroups[$groupMatch[1][0]][$mediaMatch[1]])){
-									$cssGroups[$groupMatch[1][0]][$mediaMatch[1]] = array();
-								}
+    								preg_match_all('/data-group="([^"]+)"/i', $linkMatches[0][$i][0], $groupMatch);
 
-								$cssGroups[$groupMatch[1][0]][$mediaMatch[1]][] = $linkMatches[2][$i][0];
-								$removeCSSGroups[$groupMatch[1][0]][] = $match[0];
+    								// make an array
+    								if (!isset($cssGroups[$groupMatch[1][0]][$mediaMatch[1]])){
+    									$cssGroups[$groupMatch[1][0]][$mediaMatch[1]] = array();
+    								}
 
-							}
+    								$cssGroups[$groupMatch[1][0]][$mediaMatch[1]][] = $linkMatches[2][$i][0];
+    								$removeCSSGroups[$groupMatch[1][0]][] = $match[0];
 
-						}
+    							}
 
-					}
+    						}
 
-				}
+    					}
 
-			}
-		}
+    				}
 
-		// match script[src]
-		preg_match_all('/<script([^>]+)src="([^"]+)"([^>]*)><\/script>/i', $response, $scriptMatches);
-		if (count($scriptMatches) > 0){
-			foreach ($scriptMatches[0] as $i=>$match){
+    			}
+    		}
 
-				if (strpos($scriptMatches[2][$i], '//') === FALSE && strpos($scriptMatches[2][$i], '://') === FALSE){
+        }
 
-					// no grouping
-					if (strpos($scriptMatches[0][$i], 'data-group') === FALSE){
+        // are we minifying js ?
+        if (in_array('js', config('thoughtco.minify.file_types', [])) {
 
-						$linkElements[] = $scriptMatches[2][$i];
-						$removeJS[] = $match;
+    		// match script[src]
+    		preg_match_all('/<script([^>]+)src="([^"]+)"([^>]*)><\/script>/i', $response, $scriptMatches);
+    		if (count($scriptMatches) > 0){
+    			foreach ($scriptMatches[0] as $i=>$match){
 
-					// grouping
-					} else {
+    				if (strpos($scriptMatches[2][$i], '//') === FALSE && strpos($scriptMatches[2][$i], '://') === FALSE){
 
-						preg_match_all('/data-group="([^"]+)"/i', $scriptMatches[0][$i], $groupMatch);
+    					// no grouping
+    					if (strpos($scriptMatches[0][$i], 'data-group') === FALSE){
 
-						$groupedLinkElements[$groupMatch[1][0]][] = $scriptMatches[2][$i];
-						$removeJSGroups[$groupMatch[1][0]][] = $match;
+    						$linkElements[] = $scriptMatches[2][$i];
+    						$removeJS[] = $match;
 
-					}
+    					// grouping
+    					} else {
 
-				}
+    						preg_match_all('/data-group="([^"]+)"/i', $scriptMatches[0][$i], $groupMatch);
 
-			}
-		}
+    						$groupedLinkElements[$groupMatch[1][0]][] = $scriptMatches[2][$i];
+    						$removeJSGroups[$groupMatch[1][0]][] = $match;
+
+    					}
+
+    				}
+
+    			}
+    		}
+
+        }
 
 		// do we need to make min dir?
 		$minPath = public_path($this->minPath);

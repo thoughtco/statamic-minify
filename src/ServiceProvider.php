@@ -11,4 +11,13 @@ class ServiceProvider extends AddonServiceProvider
             'Thoughtco\Minify\Listeners\MinifyListener',
         ],
     ];
+
+    public function boot()
+    {
+        parent::boot();
+
+        $this->publishes([
+            __DIR__.'/../config/minify.php' => config_path('thoughtco/minify.php')
+        ], 'config');
+    }
 }
