@@ -2,6 +2,7 @@
 
 namespace Thoughtco\Minify;
 
+use File;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -15,6 +16,10 @@ class ServiceProvider extends AddonServiceProvider
     public function boot()
     {
         parent::boot();
+
+        if (!File::exists(config_path('thoughtco'))) {
+            File::makeDirectory(config_path('thoughtco'), 0777, true, true);
+        }
 
         $this->publishes([
             __DIR__.'/../config/minify.php' => config_path('thoughtco/minify.php')

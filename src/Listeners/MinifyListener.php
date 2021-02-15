@@ -25,8 +25,8 @@ class MinifyListener
     protected function parseForMinifiableFiles($response)
     {
         // if disabled by config
-        if (!config('thoughtco.minify.minify_enabled', false))
-            return;
+        if (!call_user_func(config('thoughtco.minify.minify_enabled')))
+            return $response;
 
 		// linkgroups as we match by media type
 		$cssGroups = array();
@@ -121,6 +121,7 @@ class MinifyListener
         }
 
 		// do we need to make min dir?
+		$this->minPath = config('thoughtco.minify.min_path');
 		$minPath = public_path($this->minPath);
 		if (!is_dir($minPath)){
 			File::makeDirectory($minPath, $mode = 0777, true, true);
