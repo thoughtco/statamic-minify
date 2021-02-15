@@ -39,7 +39,7 @@ class MinifyListener
 		$removeCSS = $removeCSSGroups = $removeJS = $removeJSGroups = array();
 
         // are we minifying css ?
-        if (in_array('css', config('thoughtco.minify.file_types', [])) {
+        if (in_array('css', config('thoughtco.minify.file_types', []))) {
 
     		// match link[href]
     		preg_match_all('/<link([^>]+)href="([^"]+)"([^>]*)>/i', $response, $linkMatches, PREG_OFFSET_CAPTURE);
@@ -88,7 +88,7 @@ class MinifyListener
         }
 
         // are we minifying js ?
-        if (in_array('js', config('thoughtco.minify.file_types', [])) {
+        if (in_array('js', config('thoughtco.minify.file_types', []))) {
 
     		// match script[src]
     		preg_match_all('/<script([^>]+)src="([^"]+)"([^>]*)><\/script>/i', $response, $scriptMatches);
