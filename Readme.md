@@ -1,29 +1,15 @@
-# Minify
+# Statamic Minify
 
-Add on for Statamic to minify all CSS and JS
+Add on for Statamic v3 to minify all CSS and JS
 
-Download to App/Addons/Minify
-
-In your project root’s composer.json, add the package to the require and repositories sections, like so:
+To install:
 
 ```
-{
-    ...
-
-    "require": {
-        ...,
-        "thoughtco/minify": "*"
-    },
-
-    ...
-
-    "repositories": [
-        {
-            "type": "path",
-            "url": "app/Addons/Minify"
-        }
-    ]
+composer require thoughtco/statamic-minify
 ```
 
 Then run `composer update`
 
+Modify your settings in `config/thoughtco/minify.php`
+
+Create individual min groups by adding data-group="xxx" to the `<link>` or `<script>` tag.
