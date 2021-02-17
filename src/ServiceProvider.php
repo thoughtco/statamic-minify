@@ -13,6 +13,10 @@ class ServiceProvider extends AddonServiceProvider
         ],
     ];
 
+    protected $publishables = [
+        __DIR__.'/../config/minify.php' => 'config/thoughtco'
+    ];
+
     public function boot()
     {
         parent::boot();
@@ -20,9 +24,5 @@ class ServiceProvider extends AddonServiceProvider
         if (!File::exists(config_path('thoughtco'))) {
             File::makeDirectory(config_path('thoughtco'), 0777, true, true);
         }
-
-        $this->publishes([
-            __DIR__.'/../config/minify.php' => config_path('thoughtco/minify.php')
-        ], 'config');
     }
 }

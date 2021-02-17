@@ -123,7 +123,7 @@ class MinifyListener
 		// do we need to make min dir?
 		$this->minPath = config('thoughtco.minify.min_path');
 		$minPath = public_path($this->minPath);
-		if (!is_dir($minPath)){
+		if (!file_exists($minPath) OR !is_dir($minPath)){
 			File::makeDirectory($minPath, $mode = 0777, true, true);
 		}
 
