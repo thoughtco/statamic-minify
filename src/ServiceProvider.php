@@ -2,7 +2,7 @@
 
 namespace Thoughtco\Minify;
 
-use File;
+use Illuminate\Support\Facades\File;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -13,16 +13,18 @@ class ServiceProvider extends AddonServiceProvider
         ],
     ];
 
-    protected $publishables = [
-        __DIR__.'/../config/minify.php' => 'config/thoughtco'
-    ];
-
     public function boot()
     {
-        if (!File::isDirectory(config_path().'thoughtco')) {
-            File::makeDirectory(config_path().'thoughtco', 0775, true, true);
-        }
-
         parent::boot();
+
+        Statamic::afterInstalled(function ($command) {
+
+            if (!File::isDirectory(config_path('thoughtco')))
+                File::makeDirectory(config_path('thoughtco'), 0775, true, true);
+
+            File::copy( __DIR__.'/../config/minify.php', config_path('thoughtco/minify.php');
+
+        });
+
     }
 }
