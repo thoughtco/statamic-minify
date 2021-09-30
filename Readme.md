@@ -1,15 +1,15 @@
 # Statamic Minify
 
-Add on for Statamic v3 to minify all CSS and JS
+Add on for Statamic v3 to combine and minify all CSS and JS files found in the page response.
 
-To install:
+## Features
 
-```
-composer require thoughtco/statamic-minify
-```
+* Conditionally minify CSS or JS
+* Group together specific files using data-group on your link or script element
+* No pre-processing or combining of files required
 
-Then run `composer update`
+## Installation
 
-Modify your settings in `config/thoughtco/minify.php`
+Install by composer: `composer require thoughtco/statamic-minify`
 
-Create individual min groups by adding data-group="xxx" to the `<link>` or `<script>` tag.
+A new config file will be published, and you can modify the minification settings in `config/thoughtco/minify.php`.
