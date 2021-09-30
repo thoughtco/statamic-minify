@@ -19,8 +19,8 @@ class ServiceProvider extends AddonServiceProvider
 
     public function boot()
     {
-        if (!File::exists(config_path('thoughtco'))) {
-            File::makeDirectory(config_path('thoughtco'), 0777, true, true);
+        if (!File::isDirectory(config_path().'thoughtco')) {
+            File::makeDirectory(config_path().'thoughtco', 0775, true, true);
         }
 
         parent::boot();
