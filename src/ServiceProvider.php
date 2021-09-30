@@ -4,6 +4,7 @@ namespace Thoughtco\Minify;
 
 use Illuminate\Support\Facades\File;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
