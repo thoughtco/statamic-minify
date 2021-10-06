@@ -20,6 +20,9 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::afterInstalled(function ($command) {
 
+            if (File::exists(config_path('thoughtco/minify.php')))
+                return;
+
             if (!File::isDirectory(config_path('thoughtco')))
                 File::makeDirectory(config_path('thoughtco'), 0775, true, true);
 
