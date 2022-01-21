@@ -38,6 +38,8 @@ class MinifyListener
 		// matches to remove
 		$removeCSS = $removeCSSGroups = $removeJS = $removeJSGroups = array();
 
+        $this->ignoreUrls = config('thoughtco.minify.ignore_urls', []);
+
         // are we minifying css ?
         if (in_array('css', config('thoughtco.minify.file_types', []))) {
 
@@ -48,15 +50,19 @@ class MinifyListener
     			foreach ($linkMatches[0] as $i=>$match){
 
     				// ignore if IE blocks
-    				if (stripos($match[0], 'rel="stylesheet') !== FALSE && preg_match('/IE([^>]*)>/i', substr($response, $match[1] - 6, 7)) !== 1){
+    				if (stripos($match[0], 'rel="stylesheet') !== FALSE && preg_match('/IE([^>]*)>/i', substr($response, $match[1] - 6, 7)) !== 1) {
 
     					preg_match('/media="([^"]+)"/i', $match[0], $mediaMatch);
     					if (count($mediaMatch) > 1){
 
-    						if (strpos($linkMatches[2][$i][0], '//') === FALSE){
+    						if (strpos($linkMatches[2][$i][0], '//') === FALSE) {
+
+                    			if ($this->shouldBeIgnored($linkMatches[2][$i][0])) {
+                        			continue;
+                    			}
 
     							// no grouping
-    							if (strpos($linkMatches[0][$i][0], 'data-group') === FALSE){
+    							if (strpos($linkMatches[0][$i][0], 'data-group') === FALSE) {
 
     								$cssGroups[$mediaMatch[1]][] = $linkMatches[2][$i][0];
     								$removeCSS[] = $match[0];
@@ -92,13 +98,17 @@ class MinifyListener
 
     		// match script[src]
     		preg_match_all('/<script([^>]+)src="([^"]+)"([^>]*)><\/script>/i', $response, $scriptMatches);
-    		if (count($scriptMatches) > 0){
-    			foreach ($scriptMatches[0] as $i=>$match){
+    		if (count($scriptMatches) > 0) {
+    			foreach ($scriptMatches[0] as $i=>$match) {
 
-    				if (strpos($scriptMatches[2][$i], '//') === FALSE && strpos($scriptMatches[2][$i], '://') === FALSE){
+    				if (strpos($scriptMatches[2][$i], '//') === FALSE && strpos($scriptMatches[2][$i], '://') === FALSE) {
+
+            			if ($this->shouldBeIgnored($scriptMatches[2][$i])) {
+                			continue;
+            			}
 
     					// no grouping
-    					if (strpos($scriptMatches[0][$i], 'data-group') === FALSE){
+    					if (strpos($scriptMatches[0][$i], 'data-group') === FALSE) {
 
     						$linkElements[] = $scriptMatches[2][$i];
     						$removeJS[] = $match;
@@ -286,6 +296,16 @@ class MinifyListener
 
 		return array('file' => $iETag, 'version' => $time);
 	}
-}
 
-?>
+    protected function shouldBeIgnored($url)
+    {
+        $ignore = false;
+        foreach ($this->ignoreUrls as $ignoreUrl) {
+            if (preg_match($ignoreUrl, $url)) {
+                $ignore = true;
+            }
+        }
+
+        return $ignore;
+    }
+}
