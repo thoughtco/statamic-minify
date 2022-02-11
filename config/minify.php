@@ -6,5 +6,5 @@ return [
     'minify_enabled' => function(){
         return isset($_GET['no_min']) == false;
     },
-    'min_path' => 'assets/min/', // relative to public
+    'min_path' => '/assets/min/', // relative to public
 ];
