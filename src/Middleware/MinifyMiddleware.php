@@ -1,20 +1,19 @@
 <?php
 
-namespace Thoughtco\Minify\Listeners;
+namespace Thoughtco\Minify\Middleware;
 
+use Closure;
 use File;
 use MatthiasMullie\Minify;
-use Statamic\Events\ResponseCreated;
 
-class MinifyListener
+class MinifyMiddleware
 {
-
 	private $minPath = 'min/';
 
     /**
      * before response sent back to browser
      */
-    public function handle(ResponseCreated $event)
+    public function handle($request, Closure $next)
     {
         $content = $event->response->content();
         if (stripos($content, '<html') !== false)
