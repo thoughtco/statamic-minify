@@ -2,7 +2,7 @@
 
 namespace Thoughtco\Minify;
 
-use Illuminate\Contracts\Http\;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\File;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
