@@ -15,9 +15,14 @@ class MinifyMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $content = $event->response->content();
-        if (stripos($content, '<html') !== false)
-            $event->response->setContent($this->parseForMinifiableFiles($content));
+        $response = $next($request);
+
+        $content = $response->content();
+        if (stripos($content, '<html') !== false) {
+            $response->setContent($this->parseForMinifiableFiles($content));
+		}
+
+		return $response;
     }
 
     // parse for css/js
