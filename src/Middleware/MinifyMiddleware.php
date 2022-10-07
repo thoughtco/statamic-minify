@@ -17,10 +17,14 @@ class MinifyMiddleware
     {
         $response = $next($request);
 
-        $content = $response->content();
-        if (stripos($content, '<html') !== false) {
-            $response->setContent($this->parseForMinifiableFiles($content));
-		}
+        if (method_exists($response, 'content')) {
+
+            $content = $response->content();
+            if (stripos($content, '<html') !== false) {
+                $response->setContent($this->parseForMinifiableFiles($content));
+		    }
+
+        }
 
 		return $response;
     }
