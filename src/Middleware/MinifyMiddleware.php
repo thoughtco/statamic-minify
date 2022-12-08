@@ -33,8 +33,22 @@ class MinifyMiddleware
     protected function parseForMinifiableFiles($response)
     {
         // if disabled by config
-        if (!call_user_func(config('thoughtco.minify.minify_enabled')))
-            return $response;
+        $shouldMinify = config('thoughtco.minify.minify_enabled');
+
+        // should minify is a closure
+        if ($shouldMinify instanceof Closure) {
+            if (! call_user_func($shouldMinify)) {
+                return $response;
+            }
+
+        // its a class
+        } else {
+            if (class_exists($shouldMinify)) {
+                if (! app()->make($shouldMinify)->handle()) {
+                    return $response;
+                }
+            }
+        }
 
 		// linkgroups as we match by media type
 		$cssGroups = array();
