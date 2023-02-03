@@ -17,12 +17,16 @@ class MinifyMiddleware
     {
         $response = $next($request);
 
-        if (method_exists($response, 'content')) {
+        if (! request()->is(config('statamic.cp.route').'/*')) {
 
-            $content = $response->content();
-            if (stripos($content, '<html') !== false) {
-                $response->setContent($this->parseForMinifiableFiles($content));
-		    }
+            if (method_exists($response, 'content')) {
+
+                $content = $response->content();
+                if (stripos($content, '<html') !== false) {
+                    $response->setContent($this->parseForMinifiableFiles($content));
+		        }
+
+            }
 
         }
 
