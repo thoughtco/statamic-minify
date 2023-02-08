@@ -9,6 +9,7 @@ use MatthiasMullie\Minify;
 class MinifyMiddleware
 {
 	private $minPath = 'min/';
+	private $ignoreUrls = [];
 
     /**
      * before response sent back to browser
