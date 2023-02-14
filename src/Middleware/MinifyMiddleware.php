@@ -18,7 +18,7 @@ class MinifyMiddleware
     {
         $response = $next($request);
 
-        if (! request()->is(config('statamic.cp.route').'/*')) {
+        if (! request()->is(config('statamic.cp.route').'/*') && ! request()->is('!/*')) {
 
             if (method_exists($response, 'content')) {
 
