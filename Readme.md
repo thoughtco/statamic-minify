@@ -13,3 +13,7 @@ Add on for Statamic v3 to combine and minify all CSS and JS files found in the p
 Install by composer: `composer require thoughtco/statamic-minify`
 
 A new config file will be published, and you can modify the minification settings in `config/thoughtco/minify.php`.
+
+## Static Caching
+
+If you are using static caching, add `\Thoughtco\Minify\Replacers\MinifyReplacer::class` to your `statamic.static_caching.replacers` array.
