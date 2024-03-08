@@ -2,7 +2,6 @@
 
 namespace Thoughtco\Minify;
 
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\File;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
@@ -10,11 +9,15 @@ use Thoughtco\Minify\Middleware\MinifyMiddleware;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $middlewareGroups = [
+        'web' => [
+            MinifyMiddleware::class,
+        ],
+    ];
+
     public function boot()
     {
         parent::boot();
-
-        app(Kernel::class)->pushMiddleware(MinifyMiddleware::class);
 
         Statamic::afterInstalled(function ($command) {
 

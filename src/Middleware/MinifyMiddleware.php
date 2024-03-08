@@ -7,9 +7,6 @@ use Thoughtco\Minify\Managers\MinifyManager;
 
 class MinifyMiddleware
 {
-	private $minPath = 'min/';
-	private $ignoreUrls = [];
-
     /**
      * before response sent back to browser
      */
